@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>⚡ Sachin's Game Hub</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Monoton&family=Pacifico&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Bungee', cursive;
+      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+      color: #fff;
+      min-height: 100vh;
+      padding: 30px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    h1 {
+      font-family: 'Monoton', cursive;
+      font-size: 2.8rem;
+      color: #ff00cc;
+      text-shadow: 0 0 5px #00f0ff, 0 0 10px #00f0ff;
+      margin-bottom: 30px;
+      text-align: center;
+    }
+
+    .games-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 25px;
+      width: 100%;
+      max-width: 1200px;
+    }
+
+    .game-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 2px solid #ffffff20;
+      border-radius: 20px;
+      padding: 25px;
+      text-align: center;
+      backdrop-filter: blur(12px);
+      transition: transform 0.3s, box-shadow 0.3s;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .game-card::before {
+      content: '';
+      position: absolute;
+      width: 200%;
+      height: 200%;
+      background: conic-gradient(from 180deg at 50% 50%, #ff00cc, #3333ff, #00ffcc, #ff00cc);
+      animation: rotate 5s linear infinite;
+      z-index: 0;
+      top: -50%;
+      left: -50%;
+      filter: blur(60px);
+    }
+
+    .game-card:hover {
+      transform: translateY(-8px);
+    }
+
+    .game-card * {
+      position: relative;
+      z-index: 1;
+    }
+
+    @keyframes rotate {
+      to {
+        transform: rotate(1turn);
+      }
+    }
+
+    .game-card img {
+      width: 70px;
+      margin-bottom: 15px;
+      filter: drop-shadow(0 0 6px #fff);
+    }
+
+    .game-card h2 {
+      font-size: 1.3rem;
+      color: #00ffe5;
+      margin-bottom: 10px;
+    }
+
+    .game-card p {
+      font-size: 0.9rem;
+      color: #ccc;
+      margin-bottom: 15px;
+      font-family: 'Pacifico', cursive;
+    }
+
+    .play-btn {
+      background: #00f0ff;
+      color: #000;
+      padding: 10px 20px;
+      font-weight: bold;
+      font-size: 0.95rem;
+      border-radius: 30px;
+      border: none;
+      text-decoration: none;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .play-btn:hover {
+      background: #00ffe5;
+      transform: scale(1.05);
+    }
+
+    .score {
+      font-size: 0.85rem;
+      color: #ffeb3b;
+      margin-top: 12px;
+      font-family: monospace;
+    }
+
+    @media (max-width: 500px) {
+      h1 {
+        font-size: 2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>⚡ Sachin's Game Hub</h1>
+
+  <div class="games-container">
+    <!-- Reaction Game -->
+    <div class="game-card">
+      <img src="https://cdn-icons-png.flaticon.com/512/427/427735.png" alt="Reaction">
+      <h2>Reaction Time</h2>
+      <p>How fast are your reflexes?</p>
+      <a href="Reaction-Time-Tester/reactontest.html" class="play-btn">Play</a>
+      <div class="score">Last Score: <span id="reactionScore">-</span></div>
+    </div>
+
+    <!-- Memory Game -->
+    <div class="game-card">
+      <img src="https://cdn-icons-png.flaticon.com/512/2936/2936713.png" alt="Memory">
+      <h2>Memory Cards</h2>
+      <p>Flip and match quickly!</p>
+      <a href="memorycard/memorycard.html" class="play-btn">Play</a>
+      <div class="score">Last Score: <span id="memoryScore">-</span></div>
+    </div>
+
+    <!-- Whack-a-Mole -->
+    <div class="game-card">
+      <img src="https://cdn-icons-png.flaticon.com/512/197/197578.png" alt="Mole">
+      <h2>Whack-a-Mole</h2>
+      <p>Hit moles, not walls!</p>
+      <a href="whack-a-mole/whackmole.html" class="play-btn">Play</a>
+      <div class="score">Last Score: <span id="moleScore">-</span></div>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById("reactionScore").textContent =
+      localStorage.getItem("reactionLastScore") || "-";
+
+    document.getElementById("memoryScore").textContent =
+      localStorage.getItem("memoryLastScore") || "-";
+
+    const moleData = JSON.parse(localStorage.getItem("wackScores") || "[]");
+    document.getElementById("moleScore").textContent =
+      moleData.length > 0 ? moleData[moleData.length - 1].score : "-";
+  </script>
+</body>
+</html>

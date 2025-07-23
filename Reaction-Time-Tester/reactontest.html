@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>⚡ Reaction Time Tester</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      background: #1e1e2f;
+      color: white;
+      text-align: center;
+    }
+    .container {
+      max-width: 400px;
+      padding: 20px;
+      border-radius: 12px;
+      background: #2b2b3c;
+      box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    }
+    .screen {
+      margin-top: 20px;
+      width: 100%;
+      height: 200px;
+      border-radius: 10px;
+      background-color: #444;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      transition: background-color 0.5s ease;
+    }
+    .green {
+      background-color: #00c853 !important;
+      color: #000;
+    }
+    .red {
+      background-color: #d50000 !important;
+      color: #fff;
+    }
+    button, select {
+      margin-top: 15px;
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
+      background: #00bcd4;
+      color: white;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background: #0097a7;
+    }
+    #badge {
+      margin-top: 10px;
+      font-size: 24px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>⚡ Reaction Time Tester</h1>
+    <label for="difficulty">Select Difficulty:</label>
+    <select id="difficulty">
+      <option value="easy">Easy</option>
+      <option value="medium" selected>Medium</option>
+      <option value="hard">Hard</option>
+    </select>
+    <br/>
+    <button onclick="startGame()">Start Test</button>
+    <div class="screen" id="screen">Click "Start Test" to begin</div>
+    <p id="result"></p>
+    <div id="badge"></div>
+  </div>
+
+  <script>
+    let screen = document.getElementById('screen');
+    let result = document.getElementById('result');
+    let badge = document.getElementById('badge');
+    let difficulty = document.getElementById('difficulty');
+
+    let ready = false;
+    let startTime;
+    let timeout;
+    let rounds = 2;
+    let currentRound = 0;
+    let times = [];
+
+    const colors = ['#FFCDD2', '#C8E6C9', '#BBDEFB', '#F8BBD0', '#FFF9C4', '#D1C4E9', '#FFECB3'];
+
+function changeBackgroundColor(round) {
+  const body = document.body;
+  body.style.transition = 'background-color 0.5s ease';
+  body.style.backgroundColor = colors[round % colors.length];
+}
+
+
+    function getDelayByDifficulty() {
+      switch (difficulty.value) {
+        case 'easy': return Math.random() * 3000 + 3000;
+        case 'medium': return Math.random() * 2000 + 2000;
+        case 'hard': return Math.random() * 1000 + 1000;
+      }
+    }
+
+    function getBadge(time) {
+      if (time < 200) return "🥇 Pro";
+      else if (time < 300) return "🥈 Fast";
+      else if (time < 400) return "🥉 Okay";
+      else return "🐢 Slowpoke";
+    }
+
+    function resetGame() {
+      currentRound = 0;
+      times = [];
+      screen.classList.remove('green', 'red');
+      screen.textContent = "Wait for green...";
+      result.textContent = "";
+      badge.textContent = "";
+    }
+
+    function startGame() {
+      resetGame();
+      nextRound();
+    }
+
+    function nextRound() {
+      ready = false;
+      changeBackgroundColor(currentRound);
+      screen.classList.remove('green', 'red');
+      screen.textContent = "Wait for green...";
+
+      const delay = getDelayByDifficulty();
+
+      timeout = setTimeout(() => {
+        screen.classList.add('green');
+        screen.textContent = "Click!";
+        document.body.style.backgroundColor = "#4CAF50"; // 🟢 Green
+        ready = true;
+        startTime = new Date().getTime();
+        navigator.vibrate(100);
+      }, delay);
+    }
+
+    screen.addEventListener('click', () => {
+      if (!ready && currentRound < rounds) {
+        clearTimeout(timeout);
+        screen.classList.add('red');
+        screen.textContent = "⛔ Too Soon!";
+        document.body.style.backgroundColor = "#f44336"; // 🔴 Red
+        times.push(1000); // penalty
+        currentRound++;
+        setTimeout(() => {
+          if (currentRound < rounds) nextRound();
+          else endGame();
+        }, 1000);
+        return;
+      }
+
+      if (ready) {
+        const reactionTime = new Date().getTime() - startTime;
+        times.push(reactionTime);
+        currentRound++;
+        if (currentRound < rounds) {
+          nextRound();
+        } else {
+          endGame();
+        }
+      }
+    });
+
+    function endGame() {
+      const avg = times.reduce((a, b) => a + b, 0) / times.length;
+      result.innerHTML = `Average Reaction Time: <strong>${Math.round(avg)} ms</strong>`;
+      badge.textContent = getBadge(avg);
+      screen.textContent = "Done!";
+    }
+  </script>
+</body>
+</html>
