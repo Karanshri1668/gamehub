@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Balance the Ball</title>
+   <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="score-display">
+        Time: <span id="time">0</span>s | 
+        Bounces: <span id="bounces">0</span>
+    </div>
+    
+    <div class="game-container" id="gameContainer">
+        <div class="ball" id="ball"></div>
+        <div class="platform" id="platform">
+            <div class="platform-glow" id="platformGlow"></div>
+        </div>
+        
+        <div class="game-over" id="gameOver">
+            <h2>Game Over!</h2>
+            <p>Your time: <span id="finalTime">0</span>s</p>
+            <p>Bounces: <span id="finalBounces">0</span></p>
+            <input type="text" id="playerName" placeholder="Your name">
+            <button id="saveScore">Save Score</button>
+        </div>
+    </div>
+    
+    <div class="controls">
+        <div class="difficulty-selector">
+            <button id="easyBtn" class="active">Easy</button>
+            <button id="mediumBtn">Medium</button>
+            <button id="hardBtn">Hard</button>
+        </div>
+        <div>
+            <button id="startBtn">Start Game</button>
+            <button id="resetBtn">Reset</button>
+        </div>
+    </div>
+    
+    <div class="leaderboard">
+        <h3>Leaderboard</h3>
+        <div id="leaderboardList"></div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
